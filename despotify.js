@@ -2,13 +2,13 @@ var despotify = require("./libdespotify");
 var login = require("./login");
 var ref = require('ref');
 var ffi = require('ffi');
+var despotifyN = require("./despotify_nicer");
 
-function callback(session_ptr, signal, signal_data, callback_data) {
-
+function callback(session_ptr, signal, signal_data) {
 	if (signal==1) { //It's track info
 		dumpTrackInfo(signal_data.track.deref());
 	} else if (signal==2) { //It's the time
-		var time = signal_data.time.deref();
+		var time = signal_data;
 		console.log("time "+time);
 	} else console.log("callback! "+signal);
 }
@@ -25,7 +25,6 @@ function decodeStr(arr,excl) {
 			res = res + String.fromCharCode(p)
 		else if (excl) res = res + "!"
 			else break;
-	
 	}
 	return res;
 
@@ -99,9 +98,9 @@ function testSearch() {
 		var pcm = ref.alloc(despotify.pcm_data);
 		console.log("getting pcm");
 		var b = despotify.get_pcm(session,pcm);
-		total+=pcm.deref().len;
 	
 		console.log("return code: "+b);
+		total+=pcm.deref().len;
 		console.log("content len: "+pcm.deref().len);
 		console.log("total len  : "+total);
 		console.log("");
@@ -123,8 +122,8 @@ function concatInfo(data,infoExtract, separator) {
 	return res;
 }
 
-console.log("init result:    "+despotify.init());
-var session = despotify.init_client(despotify.make_callback(callback), null, true, true);
+console.log("init result:    "+despotifyN.init());
+var session = despotifyN.init_client(callback, true, true);
 console.log("login result:   "+despotify.authenticate(session,login.username,login.password));
 testSearch();
 //Do something so the program does not exit immediately

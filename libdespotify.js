@@ -154,7 +154,7 @@ function make_callback(callback) {
 	cb = ffi.Callback('void', [ session_ptr, 'int',  signal_data, void_ptr], callback);
 	return cb;
 }
-
+console.log("libdespotify included");
 var libdespotify = ffi.Library('libdespotify', {
 	'despotify_init':[ 'bool', [ ] ],
 	'despotify_cleanup':[ 'bool', [ ] ],
