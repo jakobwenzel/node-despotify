@@ -3,7 +3,7 @@ var ref = require("ref");
 function callbackWrapper(callback) {
 	return despotify.make_callback(function(session,signal,signal_data,callback_data) {
 		if (signal==1) {
-			return callback(session,signal,signal_data.track.deref());
+			return callback(session,signal,toObject(signal_data.track.deref()));
 		} else if (signal==2) {
 			return callback(session,signal,signal_data.time.deref());
 		} else {
