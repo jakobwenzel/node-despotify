@@ -12,24 +12,7 @@ function callback(session_ptr, signal, signal_data) {
 		console.log("time "+time);
 	} else console.log("callback! "+signal);
 }
-
-function decodeStr(arr,excl) {
-	excl = (typeof excl === "undefined") ? false : excl;
-
-	var res = "";
-	
-	for (var i=0;i<arr.length;i++) {
-	
-		var p = arr[i];
-		if (p>0)
-			res = res + String.fromCharCode(p)
-		else if (excl) res = res + "!"
-			else break;
-	}
-	return res;
-
-
-}
+decodeStr = despotifyN.decodeStr
 
 function dumpTrackInfo(track) {
 	console.log("metadata:       "+track.has_meta_data);
@@ -109,7 +92,7 @@ function testSearch() {
 }
 
 function concatInfo(data,infoExtract, separator) {
-	separator = (typeof excl === "undefined") ? ", " : separator;
+	separator = (typeof separator === "undefined") ? ", " : separator;
 	var res = "";
 	var d = data;
 	while (!d.isNull()) {
@@ -121,7 +104,6 @@ function concatInfo(data,infoExtract, separator) {
 	}
 	return res;
 }
-
 console.log("init result:    "+despotifyN.init());
 var session = despotifyN.init_client(callback, true, true);
 console.log("login result:   "+despotify.authenticate(session,login.username,login.password));
