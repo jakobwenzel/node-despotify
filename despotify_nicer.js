@@ -22,6 +22,28 @@ function init() {
 	return a;
 }
 
+function nextToArray(p) {
+	var a = new Array();
+	while (p!=null) {
+		a.push(p);
+		p=p.next;
+	}
+	return a;
+}
+
+
+function formatTime(t) {
+	var s = Math.round(t/1000);
+	var h = Math.floor(s / 3600);
+	var m = Math.floor(s / 60) % 60;
+	s = s % 60;
+	if (s<10) s = "0"+s;
+	if (h>0) {
+		if (m<10) m = "0"+m;
+		return h+":"+m+":"+s;
+	}
+	return m+":"+s;;
+}
 
 function toObject(ref,pointer) {
 	if (ref === null) return ref;
@@ -38,7 +60,16 @@ function toObject(ref,pointer) {
 			//Convert each key. Similar to ref_struct.toObject
 			var obj = {};
 	  		Object.keys(ref.constructor.fields).forEach(function (k) {
-	    			obj[k] = toObject(ref[k])
+	    			var v = toObject(ref[k],undefined);
+	    			//Convert to array if appropriate
+	    			if ((k!="next") && (v instanceof Object) && (typeof v.next != "undefined")) 
+	    				obj[k]=nextToArray(v);
+	    			else {
+	    				obj[k] = v;
+	    				if (k=="length") 
+		    				//Add time formatted in h:m:s
+		    				obj["time"] = formatTime(v);
+	    			}
 	  		}, this);
 	  		//Save reference to original object in case it needs 
 	  		//to be passed back to despotify. if a pointer was given,
@@ -62,7 +93,6 @@ function toObject(ref,pointer) {
 	}
 	return ref;
 }
-
 
 function concatInfo(data,infoExtract, separator) {
 	separator = (typeof separator === "undefined") ? ", " : separator;
@@ -91,12 +121,15 @@ function rewriteArgs(args) {
 	return newArgs;
 }
 //Rewrite arguments for function and convert result to usable object
-function resToObject(f) {
+function resToObject(f,resultToArray) {
+	resultToArray = (typeof resultToArray == "undefined")?false:resultToArray;
 	//Regular call
 	res = function(args) {			
 		//Rewrite args
 		var res = f.apply(this,rewriteArgs(arguments));
 		//And result
+		if (resultToArray)
+			return nextToArray(toObject(res));
 		return toObject(res);
 	}
 	//Async call
@@ -106,7 +139,10 @@ function resToObject(f) {
 		//Wrap callback
 		var cb = a[a.length-1];
 		a[a.length-1]=function(err,res) {
-			cb(err,toObject(res));
+			if (resultToArray)
+				cb(err,nextToArray(toObject(res)));
+			else
+				cb(err,toObject(res));
 		};
 		f.async.apply(this,a);
 	}
@@ -162,7 +198,7 @@ exports.search = resToObject(despotify.search);
 exports.search_more = resToObject(despotify.search_more);
 exports.free_search = resToObject(despotify.free_search);
 exports.get_playlist = resToObject(despotify.get_playlist);
-exports.get_stored_playlists = resToObject(despotify.get_stored_playlists);
+exports.get_stored_playlists = resToObject(despotify.get_stored_playlists,true);
 exports.rename_playlist = resToObject(despotify.rename_playlist);
 exports.set_playlist_collaboration = resToObject(despotify.set_playlist_collaboration);
 exports.free_playlist = resToObject(despotify.free_playlist);

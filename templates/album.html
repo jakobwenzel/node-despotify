@@ -1,18 +1,17 @@
-<h1>###NAME### (###NUM_ALBUMS###)</h1>
-###LOOP###
-<h3><a href="/?album=###ID###">###NAME###</a></h3>
+<h1>###NAME### (###YEAR###)</h1>
 <table>
 <tr>
 	<th></th>
 	<th>Title</th>
+	<th>Length</th>
 	<th>Artist</th>
 </tr>
 ###TRACKS###
-<tr class="###STRIPE###">
-	<td>###NUMBER###</td>
-	<td>###TITLE###</td>
-	<td>###ARTIST###!, ###<a href="/?artist=###ARTIST_ID###">###NAME###</a>###/ARTIST###</td>
+<tr class="###TRACKS.STRIPE###">
+	<td>###TRACKS.TRACKNUMBER###</td>
+	<td>###TRACKS.TITLE###</td>
+	<td>###TRACKS.TIME###</td>
+	<td>###TRACKS.ARTIST###!, ###<a href="/?artist=###TRACKS.ARTIST.ARTIST_ID###">###TRACKS.ARTIST.NAME###</a>###/TRACKS.ARTIST###</td>
 </tr>
 ###/TRACKS###
 </table>
-###/LOOP###

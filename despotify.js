@@ -6,13 +6,11 @@ var despotify = require("./despotify_nicer");
 
 function callback(session_ptr, signal, signal_data) {
 	if (signal==1) { //It's track info
-	console.log("track info");
 		dumpTrackInfo(signal_data);
-		throw new Error('my silly error');
 	} else if (signal==2) { //It's the time
-		var time = signal_data;
-//		console.log("time "+time);
+		console.log("time "+signal_data);
 	} else console.log("callback! "+signal);
+	throw new Error('');
 }
 function dumpTrackInfo(track) {
 	console.log("metadata:       "+track.has_meta_data);

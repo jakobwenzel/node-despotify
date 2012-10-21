@@ -1,0 +1,20 @@
+<h1>###NAME### (###NUM_ALBUMS###)</h1>
+###ALBUMS###
+<h3><a href="/?album=###ALBUMS.ID###">###ALBUMS.NAME###</a></h3>
+<table>
+<tr>
+	<th></th>
+	<th>Title</th>
+	<th>Length</th>
+	<th>Artist</th>
+</tr>
+###ALBUMS.TRACKS###
+<tr class="###ALBUMS.TRACKS.STRIPE###">
+	<td>###ALBUMS.TRACKS.TRACKNUMBER###</td>
+	<td>###ALBUMS.TRACKS.TITLE###</td>
+	<td>###ALBUMS.TRACKS.TIME###</td>
+	<td>###ALBUMS.TRACKS.ARTIST###!, ###<a href="/?artist=###ALBUMS.TRACKS.ARTIST.ARTIST_ID###">###ALBUMS.TRACKS.ARTIST.NAME###</a>###/ALBUMS.TRACKS.ARTIST###</td>
+</tr>
+###/ALBUMS.TRACKS###
+</table>
+###/ALBUMS###
